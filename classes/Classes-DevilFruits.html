@@ -55,9 +55,12 @@
   <select id="classFilter">
     <option value="all">All Classes</option>
     <option value="style">Fighting Styles</option>
-    <option value="mythic">⭐️ Mythic Fruits</option>
-    <option value="legendary">🟡 Legendary Fruits</option>
-    <option value="epic">🟣 Epic Fruits</option>
+    <option value="mythic">⭐️Mythic Fruits⭐️</option>
+    <option value="legendary">🟡Legendary Fruits🟡</option>
+    <option value="epic">🟣Epic Fruits🟣</option>
+    <option value="rare">🔵Rare Fruits🔵</option>
+    <option value="uncommon">🟢Uncommon Fruits🟢</option>
+    <option value="common">⚪Common Fruits⚪</option>
   </select><br>
 
   <label for="classSelect">Select Class:</label><br>
@@ -167,6 +170,30 @@
         { name: "Ice spikes", dmg: 8, stam: 0.75 },
         { name: "Pheasants Beak", dmg: 0, stam: 1.5 },
         { name: "Ice Age", dmg: 20, stam: 2 } 
+      ],
+      "🟣 Shadow Shadow Fruit": [
+        { name: "Shadow Cutter", dmg: 7, stam: 0.5 },
+        { name: "Shadow Hands", dmg: 8, stam: 0.5 },
+        { name: "Arise", dmg: 26.5, stam: 3.8 },
+        { name: "Monarchs Domain", dmg: 0, stam: 0.8 },
+      ],
+      "🟣 Paw Paw Fruit": [
+        { name: "Pressure Paw", dmg: 1.9, stam: 1 },
+        { name: "Paw Barrage", dmg: 2.25, stam: 1.3 },
+        { name: "Shock-Repel", dmg: 755, stam: 1.3 },
+        { name: "Ursus Shock", dmg: 12, stam: 1.8 }
+      ],
+      "🟣 Lightning Lightning Fruit": [
+        { name: "Sango", dmg: 9, stam: 1.3 },
+        { name: "Godspeed", dmg: 0, stam: 1.3 },
+        { name: "El-Thor", dmg: 7, stam: 1.3 },
+        { name: "Raigo", dmg: 10, stam: 1.8 }
+      ],
+      "🟣 Fire Fire Fruit": [
+        { name: "Fire bullets", dmg: 10, stam: 1 },
+        { name: "Fire blast", dmg: 5, stam: 1 },
+        { name: "Fire fist", dmg: 9, stam: 1.3 },
+        { name: "Fire pillar", dmg: 12, stam: 1.8 }
       ]
     };
 
@@ -223,6 +250,9 @@
         else if (filterType === "mythic") matchesType = className.startsWith("⭐️");
         else if (filterType === "legendary") matchesType = className.startsWith("🟡");
         else if (filterType === "epic") matchesType = className.startsWith("🟣");
+        else if (filterType === "rare") matchesType = className.startsWith("🔵");
+        else if (filterType === "epic") matchesType = className.startsWith("🟢");
+        else if (filterType === "epic") matchesType = className.startsWith("⚪");
         
         if (matchesType) {
           const option = document.createElement("option");

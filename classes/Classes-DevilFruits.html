@@ -105,14 +105,14 @@
         { name: "Iron Body", dmg: 0, stam: 0.8 },
         { name: "Onigiri", dmg: 20.6, stam: 1.3 }
       ],
-      "🟣 Quake Quake Fruit": [
+      "⭐️ Quake Quake Fruit": [
         { name: "Shock-Punch", dmg: 27, stam: 1.4 },
         { name: "Hypocentre-Sphere", dmg: 32, stam: 1.4 },
         { name: "Tremor Stomp", dmg: 32, stam: 1.4 },
         { name: "Island-Shaker", dmg: 32, stam: 1.4 },
         { name: "Tsunami (x2 hits)", dmg: 44, stam: 1.4 }
       ],
-      "🟣 Gravity Gravity Fruit": [
+      "⭐️ Gravity Gravity Fruit": [
         { name: "Push", dmg: 25, stam: 1.3 },
         { name: "Obedience", dmg: 35, stam: 1.3 },
         { name: "Meteor", dmg: 30, stam: 1.3 },
@@ -220,10 +220,10 @@
 
         if (filterType === "all") matchesType = true;
         else if (filterType === "style") matchesType = !className.includes("Fruit");
-        else if (filterType === "mythic") matchesType = className.startsWith("🟣") && className.includes("Gravity");
+        else if (filterType === "mythic") matchesType = className.startsWith("⭐️");
         else if (filterType === "legendary") matchesType = className.startsWith("🟡");
-        else if (filterType === "epic") matchesType = className.startsWith("🟣") && !className.includes("Gravity");
-
+        else if (filterType === "epic") matchesType = className.startsWith("🟣");
+        
         if (matchesType) {
           const option = document.createElement("option");
           option.value = className;

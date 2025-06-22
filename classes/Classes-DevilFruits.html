@@ -2,92 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🏴‍☠️ One Piece Class Damage Calculator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <title>Class Damage Calculator</title>
   <style>
     body {
-      font-family: 'Pirata One', cursive;
-      background: url('https://i.imgur.com/oT3R8gW.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff8dc;
+      font-family: Arial, sans-serif;
       padding: 20px;
-      text-shadow: 1px 1px 2px black;
     }
 
     h1 {
-      text-align: center;
-      font-size: 42px;
-      margin-bottom: 20px;
+      font-size: 28px;
+      margin-bottom: 10px;
     }
 
-    h1 img {
-      height: 50px;
-      vertical-align: middle;
-      margin-right: 10px;
+    input[type="text"], input[type="number"] {
+      padding: 5px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      width: 200px;
     }
 
-    input, select, button {
-      font-family: 'Pirata One', cursive;
-      background: rgba(0,0,0,0.4);
-      color: white;
-      border: 2px solid gold;
-      border-radius: 12px;
-      padding: 10px;
-      margin: 10px 0;
-    }
-
-    button {
-      cursor: pointer;
-      background: linear-gradient(to right, #d19400, #8e5400);
-      box-shadow: 0 0 10px #000;
-    }
-
-    button:hover {
-      background: linear-gradient(to right, #c18000, #7e4800);
-    }
-
-    label {
-      font-size: 20px;
-    }
-
-    #output {
-      animation: fadeScroll 1s ease-in-out;
-    }
-
-    @keyframes fadeScroll {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    select {
+      padding: 5px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      width: 210px;
     }
 
     ul {
-      list-style: none;
-      padding: 0;
       margin-top: 20px;
     }
 
     li {
-      background: rgba(0,0,0,0.6);
-      border: 1px solid gold;
-      border-radius: 10px;
-      padding: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    strong {
+      font-size: 17px;
     }
 
     .value {
-      color: #ffd700;
+      color: #2a7ae2;
       font-weight: bold;
     }
 
     .multiplier {
+      color: #888;
       font-size: 14px;
-      color: #ccc;
+      margin-left: 5px;
     }
   </style>
 </head>
 <body>
 
-  <h1><img src="https://upload.wikimedia.org/wikipedia/en/7/76/Straw_Hat_Pirates_Jolly_Roger.png" alt="Jolly Roger">One Piece Class Damage Calculator</h1>
+  <h1>Class Damage Calculator</h1>
 
   <label for="classSelect">Select Class:</label><br>
   <select id="classSelect"></select><br>
@@ -95,10 +63,11 @@
   <label for="strInput">Enter Strength Level (Str LVL):</label><br>
   <input type="number" id="strInput" value="1" min="0" step="0.5"><br>
 
-  <button id="exportBtn">📄 Export as PDF</button>
+  <button id="exportBtn">Export as PDF</button>
 
   <div id="output">Loading...</div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     const classes = {
       "Brawler": [
@@ -107,7 +76,6 @@
         { name: "Agile Strike", dmg: 2.2, stam: 1.3 },
         { name: "Multi Strike", dmg: 5.75, stam: 1.8 }
       ]
-      // Add all other classes here
     };
 
     const classSelect = document.getElementById("classSelect");
@@ -162,7 +130,7 @@
     document.getElementById("exportBtn").addEventListener("click", () => {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-      doc.text("One Piece Class Damage Output", 10, 10);
+      doc.text("Class Damage Output", 10, 10);
       doc.fromHTML(outputDiv.innerHTML, 10, 20);
       doc.save("class-damage.pdf");
     });

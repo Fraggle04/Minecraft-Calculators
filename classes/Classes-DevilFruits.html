@@ -14,16 +14,15 @@
       margin-bottom: 10px;
     }
 
-    input[type="text"], input[type="number"], select {
+    input[type="text"], input[type="number"], select, button {
       padding: 5px;
       font-size: 16px;
       margin-bottom: 15px;
-      width: 220px;
+      width: 210px;
     }
 
     ul {
       margin-top: 20px;
-      padding-left: 20px;
     }
 
     li {
@@ -46,10 +45,20 @@
       margin-left: 5px;
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
   <h1>Class Damage Calculator</h1>
+
+  <label for="classFilter">Filter Type:</label><br>
+  <select id="classFilter">
+    <option value="all">All Classes</option>
+    <option value="style">Fighting Styles</option>
+    <option value="mythic">🟣 Mythic Fruits</option>
+    <option value="legendary">🟡 Legendary Fruits</option>
+    <option value="epic">🟣 Epic Fruits</option>
+  </select><br>
 
   <label for="classSearch">Search Class:</label><br>
   <input type="text" id="classSearch" placeholder="Type to filter classes..."><br>
@@ -59,6 +68,8 @@
 
   <label for="strInput">Enter Strength Level (Str LVL):</label><br>
   <input type="number" id="strInput" value="1" min="0" step="0.5"><br>
+
+  <button id="exportBtn">Export Current Output as PDF</button><br><br>
 
   <div id="output">Loading...</div>
 
@@ -97,8 +108,6 @@
         { name: "Iron Body", dmg: 0, stam: 0.8 },
         { name: "Onigiri", dmg: 20.6, stam: 1.3 }
       ],
-
-      // Devilfruits - Mythics
       "🟣 Gravity Gravity Fruit": [
         { name: "Push", dmg: 25, stam: 1.3 },
         { name: "Obedience", dmg: 35, stam: 1.3 },
@@ -113,8 +122,6 @@
         { name: "Island-Shaker", dmg: 32, stam: 1.4 },
         { name: "Tsunami (x2 hits)", dmg: 44, stam: 1.4 }
       ],
-
-      // Devilfruits - Legendaries
       "🟡 Venom Venom Fruit": [
         { name: "Spitball", dmg: 10, stam: 1.7 },
         { name: "Fog", dmg: 18, stam: 1.2 },
@@ -137,10 +144,8 @@
         { name: "Room", dmg: 0, stam: 1.2 },
         { name: "Gamma Knife", dmg: 14, stam: 1.3 },
         { name: "Shambles", dmg: 0, stam: 0.7 },
-        { name: "Takt", dmg: 20, stam: 1.8 }
+        { name: "Takt", dmg: 20, stam: 1.8 } 
       ],
-
-      // Devilfruits - Epics
       "🟣 Awaken Ice Ice Fruit": [
         { name: "Ice-lance", dmg: 20, stam: 1.8 },
         { name: "Ice-rush", dmg: 25, stam: 1.8 },
@@ -164,7 +169,7 @@
         { name: "Room", dmg: 7.5, stam: 0.5 },
         { name: "Ice spikes", dmg: 8, stam: 0.75 },
         { name: "Pheasants Beak", dmg: 0, stam: 1.5 },
-        { name: "Ice Age", dmg: 20, stam: 2 }
+        { name: "Ice Age", dmg: 20, stam: 2 } 
       ]
     };
 
@@ -172,19 +177,8 @@
     const classSearch = document.getElementById("classSearch");
     const strInput = document.getElementById("strInput");
     const outputDiv = document.getElementById("output");
-
-    function populateClassDropdown(filter = "") {
-      classSelect.innerHTML = "";
-      for (const className in classes) {
-        if (className.toLowerCase().includes(filter.toLowerCase())) {
-          const option = document.createElement("option");
-          option.value = className;
-          option.textContent = className;
-          classSelect.appendChild(option);
-        }
-      }
-      update();
-    }
+    const exportBtn = document.getElementById("exportBtn");
+    const classFilter = document.getElementById("classFilter");
 
     function calculateOutput(className, strLvl) {
       const abilities = classes[className];
@@ -195,7 +189,6 @@
         const dmgTotal = (ability.dmg * strLvl).toFixed(2);
         const dmg2Total = ability.dmg2 ? (ability.dmg2 * strLvl).toFixed(2) : null;
         const stamTotal = (ability.stam * strLvl).toFixed(2);
-
         html += `
           <li>
             <strong>${ability.name}</strong><br>
@@ -206,8 +199,7 @@
               <span class="multiplier">(${ability.dmg2} × Str LVL)</span><br>` : ""}
             • <span class="value">${stamTotal} stamina</span>
             <span class="multiplier">(${ability.stam} × Str LVL)</span>
-          </li>
-        `;
+          </li>`;
       }
       html += "</ul>";
       return html;
@@ -223,15 +215,61 @@
       outputDiv.innerHTML = calculateOutput(className, strLvl);
     }
 
+    function populateClassDropdown(filterText = "") {
+      classSelect.innerHTML = "";
+      const filterType = classFilter.value;
+
+      for (const className in classes) {
+        const matchesText = className.toLowerCase().includes(filterText.toLowerCase());
+        let matchesType = false;
+
+        if (filterType === "all") matchesType = true;
+        else if (filterType === "style") matchesType = !className.includes("Fruit");
+        else if (filterType === "mythic") matchesType = className.startsWith("🟣") && className.includes("Gravity");
+        else if (filterType === "legendary") matchesType = className.startsWith("🟡");
+        else if (filterType === "epic") matchesType = className.startsWith("🟣") && !className.includes("Gravity");
+
+        if (matchesText && matchesType) {
+          const option = document.createElement("option");
+          option.value = className;
+          option.textContent = className;
+          classSelect.appendChild(option);
+        }
+      }
+
+      if (classSelect.options.length > 0) {
+        classSelect.selectedIndex = 0;
+        update();
+      } else {
+        outputDiv.innerHTML = "<p>No matching classes.</p>";
+      }
+    }
+
     classSearch.addEventListener("input", () => {
+      populateClassDropdown(classSearch.value);
+    });
+
+    classFilter.addEventListener("change", () => {
       populateClassDropdown(classSearch.value);
     });
 
     classSelect.addEventListener("change", update);
     strInput.addEventListener("input", update);
 
+    exportBtn.addEventListener("click", () => {
+      const element = document.getElementById("output");
+      const className = classSelect.value || "Class";
+      const opt = {
+        margin: 0.5,
+        filename: `${className.replace(/[^a-z0-9]/gi, "_")}_Stats.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().from(element).set(opt).save();
+    });
+
     populateClassDropdown(); // Initial load
   </script>
-
 </body>
 </html>

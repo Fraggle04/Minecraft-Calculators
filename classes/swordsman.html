@@ -201,9 +201,8 @@
         const dmgTotal = (ability.dmg * strLvl).toFixed(2);
         const dmg2Total = ability.dmg2 ? (ability.dmg2 * strLvl).toFixed(2) : null;
         const stamTotal = (ability.stam * strLvl).toFixed(2);
-
-       html += `
-        <li>
+        html += `
+          <li>
     <strong>${ability.name}</strong><br>
     • <span class="value">${dmgTotal} DMG</span>
     <span class="multiplier">(${ability.dmg} × Str LVL)</span><br>
@@ -214,6 +213,7 @@
     <span class="multiplier">(${ability.stam} × Str LVL)</span>
   </li>
 `;
+
 
       html += "</ul>";
       return html;

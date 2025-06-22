@@ -64,19 +64,46 @@
   <select id="classSelect"></select><br>
 
   <label for="strInput">Enter Strength Level (Str LVL):</label><br>
-  <input type="number" id="strInput" value="1" min="0" step="0.1"><br>
+  <input type="number" id="strInput" value="1" min="0" step="0.5"><br>
 
   <div id="output">Loading...</div>
 
   <script>
     const classes = {
+      "Brawler": [
+        { name: "Double Strike", dmg: 1.95, stam: 1.3 },
+        { name: "Uppercut", dmg: 3, stam: 1.3 },
+        { name: "Agile Strike", dmg: 2.2, stam: 1.3 },
+        { name: "Multi Strike", dmg: 5.75, stam: 1.8 }
+      ],
       "Swordsman": [
         { name: "Sanzen Sekai", dmg: 3.0, stam: 0.75 },
         { name: "Long Slash", dmg: 0.7, stam: 1.3 },
         { name: "Dragon Twister", dmg: 3.5, stam: 1.3 },
         { name: "Onigiri", dmg: 3.2, stam: 1.3 }
       ],
-    
+      "Gunner": [
+        { name: "Bullet Barrage", dmg: 2.5, stam: 0.75 },
+        { name: "Shotgun", dmg: 5.3, stam: 1.3 },
+        { name: "Homing Bullet", dmg: 3.2, stam: 1.3 },
+        { name: "Grenade", dmg: 3.7, stam: 1.3 }
+      ],
+      "BlackLeg": [
+        { name: "Concasse", dmg: 3.2, stam: 0.75 },
+        { name: "PartyTable", dmg: 5.2, stam: 1.3 },
+        { name: "Extra Hachi", dmg: 5.3, stam: 1.3 },
+        { name: "Diable Jambe", dmg: 0, stam: 1.3 }
+        { name: "Concasse (Boosted)", dmg: 4.3, stam: 0.75 },
+        { name: "PartyTable (Boosted)", dmg: 6.6, stam: 1.3 },
+        { name: "Extra Hachi (Boosted)", dmg: 7.5, stam: 1.3 },
+      ],
+      "Six Powers": [
+        { name: "Tempest Kick", dmg: 7.7, stam: 1.3 },
+        { name: "Shave", dmg: 0, stam: 0.8 },
+        { name: "Iron Body", dmg: 0, stam: 0.8 },
+        { name: "Onigiri", dmg: 20.6, stam: 1.3 }
+      ],
+      
     // Devilfruits - Mythics
       "🟣 Gravity Gravity Fruit": [
         { name: "Push", dmg: 25, stam: 1.3 },
@@ -120,29 +147,30 @@
       ],
 
       // Devilfruits - Epics
-      "🟣 Venom Venom Fruit": [
-        { name: "Spitball", dmg: 10, stam: 1.7 },
-        { name: "Fog", dmg: 18, stam: 1.2 },
-        { name: "Hydra", dmg: 12.5, stam: 1.7 },
-        { name: "Demon", dmg: 8, stam: 0 }
+      "🟣 Awaken Ice Ice Fruit": [
+        { name: "Ice-lance", dmg: 20, stam: 1.8 },
+        { name: "Ice-rush", dmg: 25, stam: 1.8 },
+        { name: "Ice-ball", dmg: 20, stam: 1.3 },
+        { name: "Avalanche", dmg: 20, stam: 1.3 },
+        { name: "Absolute Zero", dmg: 16, dmg: 28, stam: 1.8 }
       ],
-      "🟣 Dark Dark Fruit": [
-        { name: "Black Hole", dmg: 18.5, stam: 1.8 },
-        { name: "Liberation", dmg: 16, stam: 1.3 },
-        { name: "Dark Matter", dmg: 20, stam: 1.3 },
-        { name: "Dark Star", dmg: 14, stam: 1.3 }
+      "🟣 Love Love Fruit": [
+        { name: "Pistol Kiss", dmg: 8, stam: 1.2 },
+        { name: "Mellow", dmg: 9, stam: 1.7 },
+        { name: "Slave-Arrow", dmg: 13.5, stam: 1.3 },
+        { name: "Rizz-Zone", dmg: 18.5, stam: 1.7 }
       ],
-      "🟣 Human-Human Fruit, Model: Buddha": [
-        { name: "Transform", dmg: 0, stam: 0 },
-        { name: "Palm strike", dmg: 18, stam: 0 },
-        { name: "Zen charge", dmg: 30, stam: 0 },
-        { name: "Impact wave", dmg: 8, stam: 0 }
+      "🟣 String String Fruit": [
+        { name: "Goshikito", dmg: 13, stam: 1.8 },
+        { name: "Overheat", dmg: 8, stam: 1.8 },
+        { name: "Fullbright", dmg: 8, stam: 1.8 },
+        { name: "Birdcage", dmg: 12.5, stam: 1.8 }
       ],
-      "🟣 Ope Ope Fruit": [
-        { name: "Room", dmg: 0, stam: 1.2 },
-        { name: "Gamma Knife", dmg: 14, stam: 1.3 },
-        { name: "Shambles", dmg: 0, stam: 0.7 },
-        { name: "Takt", dmg: 20, stam: 1.8 } 
+      "🟣 Ice Ice Fruit": [
+        { name: "Room", dmg: 7.5, stam: 0.5 },
+        { name: "Ice spikes", dmg: 8, stam: 0.75 },
+        { name: "Pheasants Beak", dmg: 0, stam: 1.5 },
+        { name: "Ice Age", dmg: 20, stam: 2 } 
       ],
     };
 

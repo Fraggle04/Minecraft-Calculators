@@ -393,40 +393,42 @@ body {
     });
 
 exportBtn.addEventListener("click", () => {
-  // 1) Capture the entire page (html/body)
-  const element = document.documentElement;
+  // 0) Ensure the latest output is rendered:
+  update();
 
-  // 2) Build filename
+  // 1) Jump back to the top of the page
+  window.scrollTo(0, 0);
+
+  // 2) Grab the whole <body> (so CSS background comes along)
+  const element = document.body;
+
+  // 3) Build a clean filename
   const className = classSelect.value || "Class";
   const filename  = `FullPage_${className.replace(/[^a-z0-9]/gi, "_")}.pdf`;
 
-  // 3) PDF options
+  // 4) html2pdf options
   const opt = {
     margin:    0,
     filename,
     image:     { type: 'jpeg', quality: 0.98 },
     html2canvas: {
-      // scale up for better resolution
-      scale: 2,
-      // try to load cross-origin images (your Imgur background)
-      useCORS: true,
-      // size the canvas to the full document
-      windowWidth:  document.documentElement.scrollWidth,
-      windowHeight: document.documentElement.scrollHeight,
-      // ensure it snapshots at the top of the page
+      scale:        2,                              // higher res
+      useCORS:      true,                           // try CORS fetch
+      allowTaint:   true,                           // allow “tainted” images
+      taintTest:    false,                          // skip internal taint checks
+      windowWidth:  document.body.scrollWidth,      // full width
+      windowHeight: document.body.scrollHeight,     // full height
       scrollY:      0
     },
     jsPDF:     { unit: 'in', format: 'letter', orientation: 'portrait' }
   };
 
-  // 4) Fire off the PDF generation
+  // 5) Fire it off
   html2pdf()
     .from(element)
     .set(opt)
     .save();
 });
-
-    populateClassDropdown(); // Initial load
   </script>
 </body>
 </html>

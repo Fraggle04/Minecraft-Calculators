@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+without changing the output of this code fix the print to pdf taking a screenshot of the background and not the entire website details '<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: 'Pirata One', cursive;
-      background-image: url('https://i.imgur.com/txFf05B_d.jpeg?maxwidth=520&shape=thumb&fidelity=high');
+      background-image: url('https://i.imgur.com/txFf05B_d.jpeg?maxwidth=520&shape=thumb&fidelity=high'); /* Pirate ship background */
       background-size: cover;
       background-attachment: fixed;
       color: #fff;
@@ -56,7 +56,6 @@
       padding: 15px;
       border-radius: 12px;
       box-shadow: 0 0 10px #000;
-      max-width: 800px;
     }
 
     @keyframes fadeIn {
@@ -64,6 +63,62 @@
       to { opacity: 1; }
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <h1>Class Damage Calculator</h1>
+  
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Class Damage Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    input[type="number"], select, button {
+      padding: 5px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      width: 210px;
+    }
+
+    ul {
+      margin-top: 20px;
+    }
+
+    li {
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    strong {
+      font-size: 17px;
+    }
+
+    .value {
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .multiplier {
+      color: #888;
+      font-size: 14px;
+      margin-left: 5px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -86,6 +141,8 @@
 
   <label for="strInput">Enter Strength Level (Str LVL):</label><br>
   <input type="number" id="strInput" value="1" min="0" step="0.5"><br>
+
+  <button id="exportBtn">Export Current Output as PDF</button><br><br>
 
   <div id="output">Loading...</div>
 
@@ -242,6 +299,7 @@
       "⚪ Clear Clear Fruit": [
         { name: "Invisibility", dmg: 0, stam: 0, specialNote: "Uses 3 stamina/second" },
       ]
+
     };
 
     const classSelect = document.getElementById("classSelect");
@@ -261,30 +319,30 @@
         const boostedTotal = ability.boostedDmg ? (ability.boostedDmg * strLvl).toFixed(2) : null;
         const stamTotal = (ability.stam * strLvl).toFixed(2);
 
-        html += `<li>
+        html += <li>
           <strong>${ability.name}</strong><br>
           • <span class="value">${dmgTotal} DMG</span>
-          <span class="multiplier">(${ability.dmg} × Str LVL)</span><br>`;
+          <span class="multiplier">(${ability.dmg} × Str LVL)</span><br>;
 
         if (dmg2Total !== null) {
-          html += `• <span class="value">${dmg2Total} Tick DMG</span>
-          <span class="multiplier">(${ability.dmg2} × Str LVL)</span><br>`;
+          html += • <span class="value">${dmg2Total} Tick DMG</span>
+          <span class="multiplier">(${ability.dmg2} × Str LVL)</span><br>;
         }
 
         if (boostedTotal !== null) {
-          html += `• <span class="value">${boostedTotal} Boosted DMG</span>
+          html += • <span class="value">${boostedTotal} Boosted DMG</span>
           <span class="multiplier">(${ability.boostedDmg} × Str LVL)</span>
-          <span class="multiplier">— Boosted by ${ability.boostedBy}</span><br>`;
+          <span class="multiplier">— Boosted by ${ability.boostedBy}</span><br>;
         }
 
-        html += `• <span class="value">${stamTotal} stamina</span>
-          <span class="multiplier">(${ability.stam} × Str LVL)</span>`;
+        html += • <span class="value">${stamTotal} stamina</span>
+          <span class="multiplier">(${ability.stam} × Str LVL)</span>;
 
         if (ability.specialNote) {
-          html += `<br><em>${ability.specialNote}</em>`;
+          html += <br><em>${ability.specialNote}</em>;
         }
 
-        html += `</li>`;
+        html += </li>;
       }
       html += "</ul>";
       return html;
@@ -344,7 +402,7 @@
       const className = classSelect.value || "Class";
       const opt = {
         margin: 0.5,
-        filename: `${className.replace(/[^a-z0-9]/gi, "_")}_Stats.pdf`,
+        filename: ${className.replace(/[^a-z0-9]/gi, "_")}_Stats.pdf,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -355,4 +413,4 @@
     populateClassDropdown(); // Initial load
   </script>
 </body>
-</html>
+</html>'

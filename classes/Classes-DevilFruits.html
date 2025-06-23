@@ -396,14 +396,15 @@ body {
     strInput.addEventListener("input", update);
 
     exportBtn.addEventListener("click", () => {
-      const element = document.getElementById("output");
+      const element = document.body;
       const className = classSelect.value || "Class";
+      const filename = `FullPage_${className.replace(/[^a-z0-9]/gi, "_")}.pdf`;
       const opt = {
-        margin: 0.5,
-        filename: `${className.replace(/[^a-z0-9]/gi, "_")}_Stats.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        margin:       0.5,
+        filename:     filename,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
       };
       html2pdf().from(element).set(opt).save();
     });

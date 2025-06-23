@@ -296,6 +296,115 @@
       html += "</ul>";
       return html;
     }
+    const classSelect = document.getElementById("classSelect");
+    const strInput = document.getElementById("strInput");
+    const outputDiv = document.getElementById("output");
+    const exportBtn = document.getElementById("exportBtn");
+    const classFilter = document.getElementById("classFilter");
+
+    function calculateOutput(className, strLvl) {
+      const abilities = classes[className];
+      if (!abilities) return "<p>No abilities found for this class.</p>";
+
+      let html = "<ul>";
+      for (const ability of abilities) {
+        const dmgTotal = (ability.dmg * strLvl).toFixed(2);
+        const dmg2Total = ability.dmg2 ? (ability.dmg2 * strLvl).toFixed(2) : null;
+        const boostedTotal = ability.boostedDmg ? (ability.boostedDmg * strLvl).toFixed(2) : null;
+        const stamTotal = (ability.stam * strLvl).toFixed(2);
+
+        html += `<li>
+          <strong>${ability.name}</strong><br>
+          • <span class="value">${dmgTotal} DMG</span>
+          <span class="multiplier">(${ability.dmg} × Str LVL)</span><br>`;
+
+        if (dmg2Total !== null) {
+          html += `• <span class="value">${dmg2Total} Tick DMG</span>
+          <span class="multiplier">(${ability.dmg2} × Str LVL)</span><br>`;
+        }
+
+        if (boostedTotal !== null) {
+          html += `• <span class="value">${boostedTotal} Boosted DMG</span>
+          <span class="multiplier">(${ability.boostedDmg} × Str LVL)</span>
+          <span class="multiplier">— Boosted by ${ability.boostedBy}</span><br>`;
+        }
+
+        html += `• <span class="value">${stamTotal} stamina</span>
+          <span class="multiplier">(${ability.stam} × Str LVL)</span>`;
+
+        if (ability.specialNote) {
+          html += `<br><em>${ability.specialNote}</em>`;
+        }
+
+        html += `</li>`;
+      }
+      html += "</ul>";
+      return html;
+    }
+
+    function update() {
+      const className = classSelect.value;
+      const strLvl = parseFloat(strInput.value);
+      if (!className || isNaN(strLvl) || strLvl < 0) {
+        outputDiv.innerHTML = "<p>Please select a class and enter a valid Strength Level.</p>";
+        return;
+      }
+      outputDiv.innerHTML = calculateOutput(className, strLvl);
+    }
+
+    function populateClassDropdown() {
+      classSelect.innerHTML = "";
+      const filterType = classFilter.value;
+
+      for (const className in classes) {
+        let matchesType = false;
+
+        if (filterType === "all") matchesType = true;
+        else if (filterType === "style") matchesType = !className.includes("Fruit");
+        else if (filterType === "mythic") matchesType = className.startsWith("⭐️");
+        else if (filterType === "legendary") matchesType = className.startsWith("🟡");
+        else if (filterType === "epic") matchesType = className.startsWith("🟣");
+        else if (filterType === "rare") matchesType = className.startsWith("🔵");
+        else if (filterType === "uncommon") matchesType = className.startsWith("🟢");
+        else if (filterType === "common") matchesType = className.startsWith("⚪");
+
+        if (matchesType) {
+          const option = document.createElement("option");
+          option.value = className;
+          option.textContent = className;
+          classSelect.appendChild(option);
+        }
+      }
+
+      if (classSelect.options.length > 0) {
+        classSelect.selectedIndex = 0;
+        update();
+      } else {
+        outputDiv.innerHTML = "<p>No matching classes.</p>";
+      }
+    }
+
+    classFilter.addEventListener("change", () => {
+      populateClassDropdown();
+    });
+
+    classSelect.addEventListener("change", update);
+    strInput.addEventListener("input", update);
+
+    exportBtn.addEventListener("click", () => {
+      const element = document.getElementById("output");
+      const className = classSelect.value || "Class";
+      const opt = {
+        margin: 0.5,
+        filename: `${className.replace(/[^a-z0-9]/gi, "_")}_Stats.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().from(element).set(opt).save();
+    });
+
+    populateClassDropdown(); // Initial load
   </script>
 </body>
 </html>

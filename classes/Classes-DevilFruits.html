@@ -99,6 +99,11 @@
   <div id="output">Loading...</div>
 
   <script>
+    const classSelect = document.getElementById("classSelect");
+    const strInput = document.getElementById("strInput");
+    const outputDiv = document.getElementById("output");
+    const classFilter = document.getElementById("classFilter");
+
     const classes = {
       "Brawler": [
         { name: "Double Strike", dmg: 1.95, stam: 1.3 },
@@ -253,11 +258,6 @@
       ]
     };
 
-    const classSelect = document.getElementById("classSelect");
-    const strInput = document.getElementById("strInput");
-    const outputDiv = document.getElementById("output");
-    const classFilter = document.getElementById("classFilter");
-
     function calculateOutput(className, strLvl) {
       const abilities = classes[className];
       if (!abilities) return "<p>No abilities found for this class.</p>";
@@ -325,7 +325,7 @@
     classSelect.addEventListener("change", update);
     strInput.addEventListener("input", update);
 
-    populateClassDropdown(); // Initial load
+    populateClassDropdown();
   </script>
 </body>
 </html>

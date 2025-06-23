@@ -8,7 +8,7 @@
   <style>
     body {
       font-family: 'Open Sans', sans-serif;
-      background-image: url('https://i.imgur.com/txFf05B.jpeg'); /* full-res background */
+      background-image: url('https://i.imgur.com/txFf05B.jpeg');
       background-size: cover;
       background-attachment: fixed;
       background-position: center center;
@@ -66,13 +66,6 @@
       box-shadow: 0 0 10px #000;
       max-width: 800px;
       font-family: 'Roboto Mono', monospace;
-    }
-
-    .note {
-      display: block;
-      font-size: 14px;
-      color: #ddd;
-      margin-top: 4px;
     }
 
     @keyframes fadeIn {
@@ -260,13 +253,7 @@
       ]
 
     };
-
-    const classSelect = document.getElementById("classSelect");
-    const strInput = document.getElementById("strInput");
-    const outputDiv = document.getElementById("output");
-    const exportBtn = document.getElementById("exportBtn");
-    const classFilter = document.getElementById("classFilter");
-
+    
     function calculateOutput(className, strLvl) {
       const abilities = classes[className];
       if (!abilities) return "<p>No abilities found for this class.</p>";
@@ -300,90 +287,13 @@
         if (ability.specialNote) {
           html += `<br><em>${ability.specialNote}</em>`;
         }
+        if (ability.specialNote2) {
+          html += `<br><em>${ability.specialNote2}</em>`;
+        }
 
         html += `</li>`;
       }
       html += "</ul>";
-      return html;
-    }
-
-    function update() {
-      const className = classSelect.value;
-      const strLvl = parseFloat(strInput.value);
-      if (!className || isNaN(strLvl) || strLvl < 0) {
-        outputDiv.innerHTML = "<p>Please select a class and enter a valid Strength Level.</p>";
-        return;
-      }
-      outputDiv.innerHTML = calculateOutput(className, strLvl);
-    }
-
-    function populateClassDropdown() {
-      classSelect.innerHTML = "";
-      const filterType = classFilter.value;
-
-      for (const className in classes) {
-        let matchesType = false;
-
-        if (filterType === "all") matchesType = true;
-        else if (filterType === "style") matchesType = !className.includes("Fruit");
-        else if (filterType === "mythic") matchesType = className.startsWith("⭐️");
-        else if (filterType === "legendary") matchesType = className.startsWith("🟡");
-        else if (filterType === "epic") matchesType = className.startsWith("🟣");
-        else if (filterType === "rare") matchesType = className.startsWith("🔵");
-        else if (filterType === "uncommon") matchesType = className.startsWith("🟢");
-        else if (filterType === "common") matchesType = className.startsWith("⚪");
-
-        if (matchesType) {
-          const option = document.createElement("option");
-          option.value = className;
-          option.textContent = className;
-          classSelect.appendChild(option);
-        }
-      }
-
-      if (classSelect.options.length > 0) {
-        classSelect.selectedIndex = 0;
-        update();
-      } else {
-        outputDiv.innerHTML = "<p>No matching classes.</p>";
-      }
-    }
-
-    classFilter.addEventListener("change", () => {
-      populateClassDropdown();
-    });
-
-    classSelect.addEventListener("change", update);
-    strInput.addEventListener("input", update);
-
-    exportBtn.addEventListener("click", () => {
-      const element = document.getElementById("output");
-      const className = classSelect.value || "Class";
-      const opt = {
-        margin: 0.5,
-        filename: `${className.replace(/[^a-z0-9]/gi, "_")}_Stats.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-      html2pdf().from(element).set(opt).save();
-    });
-
-    populateClassDropdown(); // Initial load
-    
-    function renderAbility(ability, strLvl) {
-      let html = `<li><strong>${ability.name}</strong><br>`;
-      html += `• <span class="value">${(ability.dmg * strLvl).toFixed(2)} DMG</span>`;
-      if (ability.stam !== undefined) {
-        html += `<br>• <span class="value">${(ability.stam * strLvl).toFixed(2)} Stamina</span>`;
-      }
-      if (ability.specialNote) {
-        html += `<span class="note">${ability.specialNote}</span>`;
-      }
-      if (ability.specialNote2) {
-        html += `<span class="note">${ability.specialNote2}</span>`;
-      }
-      html += `</li>`;
       return html;
     }
   </script>

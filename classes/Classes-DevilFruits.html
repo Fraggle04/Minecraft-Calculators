@@ -68,6 +68,13 @@
       font-family: 'Roboto Mono', monospace;
     }
 
+    .note {
+      display: block;
+      font-size: 14px;
+      color: #ddd;
+      margin-top: 4px;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -363,6 +370,22 @@
     });
 
     populateClassDropdown(); // Initial load
+    
+    function renderAbility(ability, strLvl) {
+      let html = `<li><strong>${ability.name}</strong><br>`;
+      html += `• <span class="value">${(ability.dmg * strLvl).toFixed(2)} DMG</span>`;
+      if (ability.stam !== undefined) {
+        html += `<br>• <span class="value">${(ability.stam * strLvl).toFixed(2)} Stamina</span>`;
+      }
+      if (ability.specialNote) {
+        html += `<span class="note">${ability.specialNote}</span>`;
+      }
+      if (ability.specialNote2) {
+        html += `<span class="note">${ability.specialNote2}</span>`;
+      }
+      html += `</li>`;
+      return html;
+    }
   </script>
 </body>
 </html>

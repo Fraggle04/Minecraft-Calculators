@@ -392,22 +392,39 @@ body {
       populateClassDropdown();
     });
 
-    classSelect.addEventListener("change", update);
-    strInput.addEventListener("input", update);
+exportBtn.addEventListener("click", () => {
+  // 1) Capture the entire page (html/body)
+  const element = document.documentElement;
 
-    exportBtn.addEventListener("click", () => {
-      const element = document.body;
-      const className = classSelect.value || "Class";
-      const filename = `FullPage_${className.replace(/[^a-z0-9]/gi, "_")}.pdf`;
-      const opt = {
-        margin:       0.5,
-        filename:     filename,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-      html2pdf().from(element).set(opt).save();
-    });
+  // 2) Build filename
+  const className = classSelect.value || "Class";
+  const filename  = `FullPage_${className.replace(/[^a-z0-9]/gi, "_")}.pdf`;
+
+  // 3) PDF options
+  const opt = {
+    margin:    0,
+    filename,
+    image:     { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+      // scale up for better resolution
+      scale: 2,
+      // try to load cross-origin images (your Imgur background)
+      useCORS: true,
+      // size the canvas to the full document
+      windowWidth:  document.documentElement.scrollWidth,
+      windowHeight: document.documentElement.scrollHeight,
+      // ensure it snapshots at the top of the page
+      scrollY:      0
+    },
+    jsPDF:     { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+
+  // 4) Fire off the PDF generation
+  html2pdf()
+    .from(element)
+    .set(opt)
+    .save();
+});
 
     populateClassDropdown(); // Initial load
   </script>

@@ -5,16 +5,17 @@
   <title>Class Damage Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Pirata One', cursive;
-      background-image: url('https://i.imgur.com/txFf05B.jpeg');
-      background-size: cover;
-      background-attachment: fixed;
-      background-repeat: no-repeat;
-      background-position: center center;
-      color: #fff;
-      padding: 20px;
-    }
+body {
+  font-family: 'Pirata One', cursive;
+  background-image: url('https://i.imgur.com/txFf05B.jpeg'); /* Proper image link */
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center center;
+  color: #fff;
+  padding: 20px;
+}
+
     input[type="number"], select, button {
       background: #1f2937;
       border: 2px solid #facc15;
@@ -25,26 +26,32 @@
       margin-bottom: 15px;
       width: 210px;
     }
+
     ul {
       margin-top: 20px;
       padding-left: 20px;
     }
+
     li {
       margin-bottom: 15px;
       font-size: 16px;
     }
+
     strong {
       font-size: 17px;
     }
+
     .value {
       color: #fbbf24;
       font-weight: bold;
     }
+
     .multiplier {
       color: #d1d5db;
       font-size: 14px;
       margin-left: 5px;
     }
+
     #output {
       animation: fadeIn 0.8s ease-in-out;
       background: rgba(0, 0, 0, 0.6);
@@ -52,15 +59,84 @@
       border-radius: 12px;
       box-shadow: 0 0 10px #000;
     }
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <h1>Class Damage Calculator</h1>
+  
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Class Damage Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    input[type="number"], select, button {
+      padding: 5px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      width: 210px;
+    }
+
+    ul {
+      margin-top: 20px;
+    }
+
+    li {
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    strong {
+      font-size: 17px;
+    }
+
+    .value {
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .multiplier {
+      color: #888;
+      font-size: 14px;
+      margin-left: 5px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <h1>Class Damage Calculator</h1>
 
   <label for="classFilter">Filter Type:</label><br>
-  <select id="classFilter"> … </select><br>
+  <select id="classFilter">
+    <option value="all">All Classes</option>
+    <option value="style">Fighting Styles</option>
+    <option value="mythic">⭐️Mythic Fruits⭐️</option>
+    <option value="legendary">🟡Legendary Fruits🟡</option>
+    <option value="epic">🟣Epic Fruits🟣</option>
+    <option value="rare">🔵Rare Fruits🔵</option>
+    <option value="uncommon">🟢Uncommon Fruits🟢</option>
+    <option value="common">⚪Common Fruits⚪</option>
+  </select><br>
 
   <label for="classSelect">Select Class:</label><br>
   <select id="classSelect"></select><br>

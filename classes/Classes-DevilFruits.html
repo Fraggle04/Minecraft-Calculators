@@ -4,11 +4,15 @@
   <meta charset="UTF-8">
   <title>Class Damage Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
-
+Expand
+Classes-DevilFruits.html
+15 KB
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Class Damage Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
   <style>
 body {
@@ -327,30 +331,30 @@ body {
         const boostedTotal = ability.boostedDmg ? (ability.boostedDmg * strLvl).toFixed(2) : null;
         const stamTotal = (ability.stam * strLvl).toFixed(2);
 
-        html += <li>
+        html += `<li>
           <strong>${ability.name}</strong><br>
           • <span class="value">${dmgTotal} DMG</span>
-          <span class="multiplier">(${ability.dmg} × Str LVL)</span><br>;
+          <span class="multiplier">(${ability.dmg} × Str LVL)</span><br>`;
 
         if (dmg2Total !== null) {
-          html += • <span class="value">${dmg2Total} Tick DMG</span>
-          <span class="multiplier">(${ability.dmg2} × Str LVL)</span><br>;
+          html += `• <span class="value">${dmg2Total} Tick DMG</span>
+          <span class="multiplier">(${ability.dmg2} × Str LVL)</span><br>`;
         }
 
         if (boostedTotal !== null) {
-          html += • <span class="value">${boostedTotal} Boosted DMG</span>
+          html += `• <span class="value">${boostedTotal} Boosted DMG</span>
           <span class="multiplier">(${ability.boostedDmg} × Str LVL)</span>
-          <span class="multiplier">— Boosted by ${ability.boostedBy}</span><br>;
+          <span class="multiplier">— Boosted by ${ability.boostedBy}</span><br>`;
         }
 
-        html += • <span class="value">${stamTotal} stamina</span>
-          <span class="multiplier">(${ability.stam} × Str LVL)</span>;
+        html += `• <span class="value">${stamTotal} stamina</span>
+          <span class="multiplier">(${ability.stam} × Str LVL)</span>`;
 
         if (ability.specialNote) {
-          html += <br><em>${ability.specialNote}</em>;
+          html += `<br><em>${ability.specialNote}</em>`;
         }
 
-        html += </li>;
+        html += `</li>`;
       }
       html += "</ul>";
       return html;
@@ -410,7 +414,7 @@ body {
       const className = classSelect.value || "Class";
       const opt = {
         margin: 0.5,
-        filename: ${className.replace(/[^a-z0-9]/gi, "_")}_Stats.pdf,
+        filename: `${className.replace(/[^a-z0-9]/gi, "_")}_Stats.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }

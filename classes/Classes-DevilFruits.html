@@ -6,99 +6,83 @@
   <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Pirata One' ;
+      font-family: 'Pirata One', cursive;
       background-image: url('https://i.imgur.com/txFf05B.jpeg');
       background-size: cover;
       background-attachment: fixed;
-      background-repeat: no-repeat;
       background-position: center center;
+      background-repeat: no-repeat;
       color: #ffffff;
       padding: 20px;
+      font-size: 16px;
     }
-
+    .calculator-container {
+      max-width: 900px;
+      margin: auto;
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+      border-radius: 12px;
+    }
     h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
+      font-size: 2em;
+      margin-bottom: 0.5em;
     }
-
     input[type="number"], select, button {
       background: #1f2937;
       border: 2px solid #facc15;
       color: white;
       border-radius: 8px;
-      padding: 8px;
-      font-size: 22px;
-      margin-bottom: 15px;
-      width: 210px;
+      padding: 0.5em;
+      font-size: 1em;
+      margin-bottom: 1em;
+      width: 220px;
+      display: block;
     }
-
-    ul {
-      margin-top: 20px;
-      padding-left: 20px;
-    }
-
-    li {
-      margin-bottom: 15px;
-      font-size: 22px;
-    }
-
-    strong {
-      font-size: 22px;
-    }
-
-    .value {
-      color: #fbbf24;
-      font-weight: bold;
-    }
-
-    .multiplier {
-      color: #d1d5db;
-      font-size: 18px;
-      margin-left: 5px;
-    }
-
     #output {
       animation: fadeIn 0.8s ease-in-out;
       background: rgba(0, 0, 0, 0.6);
-      padding: 15px;
+      padding: 1em;
       border-radius: 12px;
       box-shadow: 0 0 10px #000;
+      margin-top: 1em;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    ul { padding-left: 1.5em; margin:0; }
+    li { margin-bottom:0.75em; }
+    .value { color: #fbbf24; font-weight: bold; }
+    .multiplier { color: #d1d5db; font-size:0.9em; margin-left:0.5em; }
+    @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
+  <div class="calculator-container" id="snapshot">
+    <h1>Class Damage Calculator</h1>
 
-  <h1>Class Damage Calculator</h1>
+    <label for="classFilter">Filter Type:</label>
+    <select id="classFilter">
+      <option value="all">All Classes</option>
+      <option value="style">Fighting Styles</option>
+      <option value="mythic">⭐️ Mythic Fruits</option>
+      <option value="legendary">🟡 Legendary Fruits</option>
+      <option value="epic">🟣 Epic Fruits</option>
+      <option value="rare">🔵 Rare Fruits</option>
+      <option value="uncommon">🟢 Uncommon Fruits</option>
+      <option value="common">⚪ Common Fruits</option>
+    </select>
 
-  <label for="classFilter">Filter Type:</label><br>
-  <select id="classFilter">
-    <option value="all">All Classes</option>
-    <option value="style">Fighting Styles</option>
-    <option value="mythic">⭐️Mythic Fruits⭐️</option>
-    <option value="legendary">🟡Legendary Fruits🟡</option>
-    <option value="epic">🟣Epic Fruits🟣</option>
-    <option value="rare">🔵Rare Fruits🔵</option>
-    <option value="uncommon">🟢Uncommon Fruits🟢</option>
-    <option value="common">⚪Common Fruits⚪</option>
-  </select><br>
+    <label for="classSelect">Select Class:</label>
+    <select id="classSelect"></select>
 
-  <label for="classSelect">Select Class:</label><br>
-  <select id="classSelect"></select><br>
+    <label for="strInput">Enter Strength Level (Str LVL):</label>
+    <input type="number" id="strInput" value="1" min="0" step="0.5">
 
-  <label for="strInput">Enter Strength Level (Str LVL):</label><br>
-  <input type="number" id="strInput" value="1" min="0" step="0.5"><br>
+    <button id="exportBtn">Export Current View as PDF</button>
 
-  <button id="exportBtn">Export Current Output as PDF</button><br><br>
+    <div id="output">Loading...</div>
+  </div>
 
-  <div id="output">Loading...</div>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
+    // (classes object unchanged)
     const classes = {
       "Brawler": [
         { name: "Double Strike", dmg: 1.95, stam: 1.3 },
@@ -254,130 +238,63 @@
 
     };
 
-    const classSelect = document.getElementById("classSelect");
-    const strInput = document.getElementById("strInput");
-    const outputDiv = document.getElementById("output");
-    const exportBtn = document.getElementById("exportBtn");
-    const classFilter = document.getElementById("classFilter");
+    const classFilterElem = document.getElementById('classFilter');
+    const classSelectElem = document.getElementById('classSelect');
+    const strInputElem   = document.getElementById('strInput');
+    const outputDiv      = document.getElementById('output');
 
-    function calculateOutput(className, strLvl) {
-      const abilities = classes[className];
-      if (!abilities) return "<p>No abilities found for this class.</p>";
-
-      let html = "<ul>";
-      for (const ability of abilities) {
-        const dmgTotal = (ability.dmg * strLvl).toFixed(2);
-        const dmg2Total = ability.dmg2 ? (ability.dmg2 * strLvl).toFixed(2) : null;
-        const boostedTotal = ability.boostedDmg ? (ability.boostedDmg * strLvl).toFixed(2) : null;
-        const stamTotal = (ability.stam * strLvl).toFixed(2);
-
-        html += `<li>
-          <strong>${ability.name}</strong><br>
-          • <span class="value">${dmgTotal} DMG</span>
-          <span class="multiplier">(${ability.dmg} × Str LVL)</span><br>`;
-
-        if (dmg2Total !== null) {
-          html += `• <span class="value">${dmg2Total} Tick DMG</span>
-          <span class="multiplier">(${ability.dmg2} × Str LVL)</span><br>`;
-        }
-
-        if (boostedTotal !== null) {
-          html += `• <span class="value">${boostedTotal} Boosted DMG</span>
-          <span class="multiplier">(${ability.boostedDmg} × Str LVL)</span>
-          <span class="multiplier">— Boosted by ${ability.boostedBy}</span><br>`;
-        }
-
-        html += `• <span class="value">${stamTotal} stamina</span>
-          <span class="multiplier">(${ability.stam} × Str LVL)</span>`;
-
-        if (ability.specialNote) {
-          html += `<br><em>${ability.specialNote}</em>`;
-        }
-
-        html += `</li>`;
-      }
-      html += "</ul>";
-      return html;
+    function calculateOutput(cls, lvl) {
+      const abilities = classes[cls]||[];
+      if (!abilities.length) return '<p>No abilities found.</p>';
+      let html = '<ul>';
+      abilities.forEach(a=>{
+        const d = (a.dmg*lvl).toFixed(2);
+        const s = (a.stam*lvl).toFixed(2);
+        html += `<li><strong>${a.name}</strong><br>`+
+                `• <span class="value">${d} DMG</span><span class="multiplier">(${a.dmg}×Str)</span><br>`+
+                `• <span class="value">${s} stam</span><span class="multiplier">(${a.stam}×Str)</span>`+
+                (a.specialNote?`<br><em>${a.specialNote}</em>`:'')+
+                '</li>';
+      });
+      return html+'</ul>';
     }
 
     function update() {
-      const className = classSelect.value;
-      const strLvl = parseFloat(strInput.value);
-      if (!className || isNaN(strLvl) || strLvl < 0) {
-        outputDiv.innerHTML = "<p>Please select a class and enter a valid Strength Level.</p>";
-        return;
-      }
-      outputDiv.innerHTML = calculateOutput(className, strLvl);
+      const cls = classSelectElem.value;
+      const lvl = parseFloat(strInputElem.value);
+      outputDiv.innerHTML = (!cls||isNaN(lvl)||lvl<0)
+        ? '<p>Select class & valid Str.</p>'
+        : calculateOutput(cls,lvl);
     }
 
-    function populateClassDropdown() {
-      classSelect.innerHTML = "";
-      const filterType = classFilter.value;
-
-      for (const className in classes) {
-        let matchesType = false;
-
-        if (filterType === "all") matchesType = true;
-        else if (filterType === "style") matchesType = !className.includes("Fruit");
-        else if (filterType === "mythic") matchesType = className.startsWith("⭐️");
-        else if (filterType === "legendary") matchesType = className.startsWith("🟡");
-        else if (filterType === "epic") matchesType = className.startsWith("🟣");
-        else if (filterType === "rare") matchesType = className.startsWith("🔵");
-        else if (filterType === "uncommon") matchesType = className.startsWith("🟢");
-        else if (filterType === "common") matchesType = className.startsWith("⚪");
-
-        if (matchesType) {
-          const option = document.createElement("option");
-          option.value = className;
-          option.textContent = className;
-          classSelect.appendChild(option);
-        }
-      }
-
-      if (classSelect.options.length > 0) {
-        classSelect.selectedIndex = 0;
-        update();
-      } else {
-        outputDiv.innerHTML = "<p>No matching classes.</p>";
-      }
+    function populate() {
+      classSelectElem.innerHTML = '';
+      const ft = classFilterElem.value;
+      Object.keys(classes).forEach(cls=>{
+        let ok = ft==='all'
+          ||(ft==='style'    &&!cls.includes('Fruit'))
+          ||(ft==='mythic'   &&cls.startsWith('⭐️'))
+          ||(ft==='legendary'&&cls.startsWith('🟡'))
+          ||(ft==='epic'     &&cls.startsWith('🟣'))
+          ||(ft==='rare'     &&cls.startsWith('🔵'))
+          ||(ft==='uncommon' &&cls.startsWith('🟢'))
+          ||(ft==='common'   &&cls.startsWith('⚪'));
+        if(ok) classSelectElem.add(new Option(cls,cls));
+      });
+      if(classSelectElem.options.length){ classSelectElem.selectedIndex=0; update(); }
+      else outputDiv.innerHTML='<p>No matching classes.</p>';
     }
 
-    classFilter.addEventListener("change", populateClassDropdown);
-    classSelect.addEventListener("change", update);
-    strInput.addEventListener("input", update);
+    classFilterElem.onchange = populate;
+    classSelectElem.onchange = update;
+    strInputElem.oninput = update;
 
-    window.addEventListener("load", () => {
-      populateClassDropdown();
-    });
+    document.getElementById('exportBtn').onclick = ()=>{
+      const element = document.getElementById('snapshot');
+      html2pdf().from(element).set({ margin:0.2, filename:'calc.pdf', html2canvas:{scale:2,useCORS:true}}).save();
+    };
 
-    exportBtn.addEventListener("click", () => {
-      update();
-      window.scrollTo(0, 0);
-      const element = document.body;
-      const className = classSelect.value || "Class";
-      const filename  = `FullPage_${className.replace(/[^a-z0-9]/gi, "_")}.pdf`;
-
-      const opt = {
-        margin: 0,
-        filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          taintTest: false,
-          windowWidth: document.body.scrollWidth,
-          windowHeight: document.body.scrollHeight,
-          scrollY: 0
-        },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-
-      html2pdf()
-        .from(element)
-        .set(opt)
-        .save();
-    });
+    window.onload = populate;
   </script>
 </body>
 </html>

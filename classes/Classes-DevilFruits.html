@@ -10,8 +10,8 @@
       background-image: url('https://i.imgur.com/txFf05B.jpeg');
       background-size: cover;
       background-attachment: fixed;
-      background-repeat: no-repeat;
       background-position: center center;
+      background-repeat: no-repeat;
       color: #ffffff;
       padding: 20px;
     }
@@ -27,7 +27,7 @@
       color: white;
       border-radius: 8px;
       padding: 8px;
-      font-size: 24px;
+      font-size: 16px;
       margin-bottom: 15px;
       width: 210px;
     }
@@ -93,8 +93,6 @@
 
   <label for="strInput">Enter Strength Level (Str LVL):</label><br>
   <input type="number" id="strInput" value="1" min="0" step="0.5"><br>
-
-  <button id="exportBtn">Export Current Output as PDF</button><br><br>
 
   <div id="output">Loading...</div>
 
@@ -257,7 +255,6 @@
     const classSelect = document.getElementById("classSelect");
     const strInput = document.getElementById("strInput");
     const outputDiv = document.getElementById("output");
-    const exportBtn = document.getElementById("exportBtn");
     const classFilter = document.getElementById("classFilter");
 
     function calculateOutput(className, strLvl) {
@@ -267,34 +264,15 @@
       let html = "<ul>";
       for (const ability of abilities) {
         const dmgTotal = (ability.dmg * strLvl).toFixed(2);
-        const dmg2Total = ability.dmg2 ? (ability.dmg2 * strLvl).toFixed(2) : null;
-        const boostedTotal = ability.boostedDmg ? (ability.boostedDmg * strLvl).toFixed(2) : null;
         const stamTotal = (ability.stam * strLvl).toFixed(2);
-
-        html += `<li>
-          <strong>${ability.name}</strong><br>
-          • <span class="value">${dmgTotal} DMG</span>
-          <span class="multiplier">(${ability.dmg} × Str LVL)</span><br>`;
-
-        if (dmg2Total !== null) {
-          html += `• <span class="value">${dmg2Total} Tick DMG</span>
-          <span class="multiplier">(${ability.dmg2} × Str LVL)</span><br>`;
-        }
-
-        if (boostedTotal !== null) {
-          html += `• <span class="value">${boostedTotal} Boosted DMG</span>
-          <span class="multiplier">(${ability.boostedDmg} × Str LVL)</span>
-          <span class="multiplier">— Boosted by ${ability.boostedBy}</span><br>`;
-        }
-
-        html += `• <span class="value">${stamTotal} stamina</span>
-          <span class="multiplier">(${ability.stam} × Str LVL)</span>`;
-
-        if (ability.specialNote) {
-          html += `<br><em>${ability.specialNote}</em>`;
-        }
-
-        html += `</li>`;
+        html += `
+          <li>
+            <strong>${ability.name}</strong><br>
+            • <span class="value">${dmgTotal} DMG</span>
+            <span class="multiplier">(${ability.dmg} × Str LVL)</span><br>
+            • <span class="value">${stamTotal} stamina</span>
+            <span class="multiplier">(${ability.stam} × Str LVL)</span>
+          </li>`;
       }
       html += "</ul>";
       return html;
@@ -311,73 +289,37 @@
     }
 
     function populateClassDropdown() {
-      classSelect.innerHTML = "";
+      classSelect.innerHTML = '';
       const filterType = classFilter.value;
-
       for (const className in classes) {
-        let matchesType = false;
-
-        if (filterType === "all") matchesType = true;
-        else if (filterType === "style") matchesType = !className.includes("Fruit");
-        else if (filterType === "mythic") matchesType = className.startsWith("⭐️");
-        else if (filterType === "legendary") matchesType = className.startsWith("🟡");
-        else if (filterType === "epic") matchesType = className.startsWith("🟣");
-        else if (filterType === "rare") matchesType = className.startsWith("🔵");
-        else if (filterType === "uncommon") matchesType = className.startsWith("🟢");
-        else if (filterType === "common") matchesType = className.startsWith("⚪");
-
-        if (matchesType) {
-          const option = document.createElement("option");
-          option.value = className;
-          option.textContent = className;
-          classSelect.appendChild(option);
+        let matches = filterType === 'all' ||
+          (filterType === 'style' && !className.includes('Fruit')) ||
+          (filterType === 'mythic' && className.startsWith('⭐️')) ||
+          (filterType === 'legendary' && className.startsWith('🟡')) ||
+          (filterType === 'epic' && className.startsWith('🟣')) ||
+          (filterType === 'rare' && className.startsWith('🔵')) ||
+          (filterType === 'uncommon' && className.startsWith('🟢')) ||
+          (filterType === 'common' && className.startsWith('⚪'));
+        if (matches) {
+          const o = document.createElement('option');
+          o.value = className;
+          o.textContent = className;
+          classSelect.appendChild(o);
         }
       }
-
-      if (classSelect.options.length > 0) {
+      if (classSelect.options.length) {
         classSelect.selectedIndex = 0;
         update();
       } else {
-        outputDiv.innerHTML = "<p>No matching classes.</p>";
+        outputDiv.innerHTML = '<p>No matching classes.</p>';
       }
     }
 
-    classFilter.addEventListener("change", populateClassDropdown);
-    classSelect.addEventListener("change", update);
-    strInput.addEventListener("input", update);
+    classFilter.addEventListener('change', populateClassDropdown);
+    classSelect.addEventListener('change', update);
+    strInput.addEventListener('input', update);
 
-    window.addEventListener("load", () => {
-      populateClassDropdown();
-    });
-
-    exportBtn.addEventListener("click", () => {
-      update();
-      window.scrollTo(0, 0);
-      const element = document.body;
-      const className = classSelect.value || "Class";
-      const filename  = `FullPage_${className.replace(/[^a-z0-9]/gi, "_")}.pdf`;
-
-      const opt = {
-        margin: 0,
-        filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          taintTest: false,
-          windowWidth: document.body.scrollWidth,
-          windowHeight: document.body.scrollHeight,
-          scrollY: 0
-        },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-
-      html2pdf()
-        .from(element)
-        .set(opt)
-        .save();
-    });
+    window.addEventListener('DOMContentLoaded', () => populateClassDropdown());
   </script>
 </body>
 </html>

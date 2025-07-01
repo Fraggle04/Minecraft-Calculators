@@ -5,16 +5,21 @@
   <title>Class Damage Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
   <style>
-body {
-  font-family: 'Pirata One', cursive;
-  background-image: url('https://i.imgur.com/txFf05B.jpeg'); /* Proper image link */
-  background-size: cover;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-position: center center;
-  color: #ffffff;
-  padding: 20px;
-}
+    body {
+      font-family: 'Pirata One', cursive;
+      background-image: url('https://i.imgur.com/txFf05B.jpeg');
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-position: center center;
+      color: #ffffff;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
 
     input[type="number"], select, button {
       background: #1f2937;
@@ -63,57 +68,6 @@ body {
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
-    }
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-</head>
-
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Class Damage Calculator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    input[type="number"], select, button {
-      padding: 5px;
-      font-size: 16px;
-      margin-bottom: 15px;
-      width: 210px;
-    }
-
-    ul {
-      margin-top: 20px;
-    }
-
-    li {
-      margin-bottom: 15px;
-      font-size: 16px;
-    }
-
-    strong {
-      font-size: 17px;
-    }
-
-    .value {
-      color: #ffffff;
-      font-weight: bold;
-    }
-
-    .multiplier {
-      color: #888;
-      font-size: 14px;
-      margin-left: 5px;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -388,47 +342,42 @@ body {
       }
     }
 
-    classFilter.addEventListener("change", () => {
+    classFilter.addEventListener("change", populateClassDropdown);
+    classSelect.addEventListener("change", update);
+    strInput.addEventListener("input", update);
+
+    window.addEventListener("load", () => {
       populateClassDropdown();
     });
 
-exportBtn.addEventListener("click", () => {
-  // 0) Ensure the latest output is rendered:
-  update();
+    exportBtn.addEventListener("click", () => {
+      update();
+      window.scrollTo(0, 0);
+      const element = document.body;
+      const className = classSelect.value || "Class";
+      const filename  = `FullPage_${className.replace(/[^a-z0-9]/gi, "_")}.pdf`;
 
-  // 1) Jump back to the top of the page
-  window.scrollTo(0, 0);
+      const opt = {
+        margin: 0,
+        filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          taintTest: false,
+          windowWidth: document.body.scrollWidth,
+          windowHeight: document.body.scrollHeight,
+          scrollY: 0
+        },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
 
-  // 2) Grab the whole <body> (so CSS background comes along)
-  const element = document.body;
-
-  // 3) Build a clean filename
-  const className = classSelect.value || "Class";
-  const filename  = `FullPage_${className.replace(/[^a-z0-9]/gi, "_")}.pdf`;
-
-  // 4) html2pdf options
-  const opt = {
-    margin:    0,
-    filename,
-    image:     { type: 'jpeg', quality: 0.98 },
-    html2canvas: {
-      scale:        2,                              // higher res
-      useCORS:      true,                           // try CORS fetch
-      allowTaint:   true,                           // allow “tainted” images
-      taintTest:    false,                          // skip internal taint checks
-      windowWidth:  document.body.scrollWidth,      // full width
-      windowHeight: document.body.scrollHeight,     // full height
-      scrollY:      0
-    },
-    jsPDF:     { unit: 'in', format: 'letter', orientation: 'portrait' }
-  };
-
-  // 5) Fire it off
-  html2pdf()
-    .from(element)
-    .set(opt)
-    .save();
-});
+      html2pdf()
+        .from(element)
+        .set(opt)
+        .save();
+    });
   </script>
 </body>
 </html>

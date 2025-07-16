@@ -69,10 +69,3 @@
 | 🧠 Idea       | PvE/PvP Split, Redis                    |
 
 ---
-
-## 📎 Usage
-
-You can:
-- Paste this into your GitHub Project’s **README.md** or wiki
-- Paste directly into a **Notion page** with auto-table detection
-- Convert to **GitHub Issues** for each task if you want tracking and linking
